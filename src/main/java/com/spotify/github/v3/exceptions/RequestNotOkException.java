@@ -39,6 +39,7 @@ import java.util.Map;
 
 /** HTTP response with non-200 StatusCode. */
 public class RequestNotOkException extends GithubException {
+  private static final long serialVersionUID = 1L;
 
   private final int statusCode;
   private final String method;
