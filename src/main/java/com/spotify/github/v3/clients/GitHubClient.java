@@ -215,7 +215,7 @@ public class GitHubClient {
    * @return github api client
    */
   public static GitHubClient create(
-      final URI baseUrl, final byte[] privateKey, final Integer appId, final Integer installationId) {
+          final URI baseUrl, final byte[] privateKey, final Integer appId, final Integer installationId) {
     return new GitHubClient(new OkHttpClient(), baseUrl, null, null, privateKey, appId, installationId);
   }
 
@@ -246,11 +246,11 @@ public class GitHubClient {
    * @return github api client
    */
   public static GitHubClient create(
-      final OkHttpClient httpClient,
-      final URI baseUrl,
-      final URI graphqlUrl,
-      final File privateKey,
-      final Integer appId) {
+          final OkHttpClient httpClient,
+          final URI baseUrl,
+          final URI graphqlUrl,
+          final File privateKey,
+          final Integer appId) {
     return createOrThrow(httpClient, baseUrl, graphqlUrl, privateKey, appId, null);
   }
 
@@ -264,10 +264,10 @@ public class GitHubClient {
    * @return github api client
    */
   public static GitHubClient create(
-      final OkHttpClient httpClient,
-      final URI baseUrl,
-      final byte[] privateKey,
-      final Integer appId) {
+          final OkHttpClient httpClient,
+          final URI baseUrl,
+          final byte[] privateKey,
+          final Integer appId) {
     return new GitHubClient(httpClient, baseUrl, null, null, privateKey, appId, null);
   }
 
@@ -301,11 +301,11 @@ public class GitHubClient {
    * @return github api client
    */
   public static GitHubClient create(
-      final OkHttpClient httpClient,
-      final URI baseUrl,
-      final byte[] privateKey,
-      final Integer appId,
-      final Integer installationId) {
+          final OkHttpClient httpClient,
+          final URI baseUrl,
+          final byte[] privateKey,
+          final Integer appId,
+          final Integer installationId) {
     return new GitHubClient(httpClient, baseUrl, null, null, privateKey, appId, installationId);
   }
 
@@ -323,7 +323,7 @@ public class GitHubClient {
   }
 
   public static GitHubClient create(
-      final OkHttpClient httpClient, final URI baseUrl, final URI graphqlUrl, final String token) {
+          final OkHttpClient httpClient, final URI baseUrl, final URI graphqlUrl, final String token) {
     return new GitHubClient(httpClient, baseUrl, graphqlUrl, token, null, null, null);
   }
 
@@ -379,18 +379,18 @@ public class GitHubClient {
    */
   public CompletionStage<Optional<GitHubClient>> asAppScopedClient(final String owner) {
     return Async.exceptionallyCompose(this
-        .createOrganisationClient(owner)
-        .createGithubAppClient()
-        .getInstallation()
-        .thenApply(Installation::id), e -> {
+                    .createOrganisationClient(owner)
+                    .createGithubAppClient()
+                    .getInstallation()
+                    .thenApply(Installation::id), e -> {
                     if (e.getCause() instanceof RequestNotOkException && ((RequestNotOkException) e.getCause()).statusCode() == HTTP_NOT_FOUND) {
-            return this
-                .createUserClient(owner)
-                .createGithubAppClient()
-                .getUserInstallation()
-                .thenApply(Installation::id);
-          }
-          return CompletableFuture.failedFuture(e);
+                        return this
+                            .createUserClient(owner)
+                            .createGithubAppClient()
+                            .getUserInstallation()
+                            .thenApply(Installation::id);
+                      }
+                      return CompletableFuture.failedFuture(e);
         })
         .thenApply(id -> Optional.of(this.withScopeForInstallationId(id)))
         .exceptionally(
@@ -467,10 +467,10 @@ public class GitHubClient {
   }
 
   /**
-   * Create user API client
-   *
-   * @return user API client
-   */
+  * Create user API client
+  *
+  * @return user API client
+  */
   public UserClient createUserClient(final String owner) {
     return UserClient.create(this, owner);
   }
@@ -649,7 +649,7 @@ public class GitHubClient {
    * @see "https://docs.github.com/en/enterprise-server@3.9/graphql/guides/forming-calls-with-graphql#communicating-with-graphql"
    */
   public CompletableFuture<Response> postGraphql(final String data) {
-    final Request request = 
+    final Request request =
         graphqlRequestBuilder()
             .method("POST", RequestBody.create(data, parse(MediaType.APPLICATION_JSON)))
             .build();
@@ -665,7 +665,7 @@ public class GitHubClient {
    * @return response body as String
    */
   CompletableFuture<Response> put(final String path, final String data) {
-    final Request request = 
+    final Request request =
         requestBuilder(path)
             .method("PUT", RequestBody.create(data, parse(MediaType.APPLICATION_JSON)))
             .build();
@@ -780,10 +780,11 @@ public class GitHubClient {
   }
 
   private Request.Builder requestBuilder(final String path) {
-    final Request.Builder builder = new Request.Builder()
-        .url(urlFor(path))
-        .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-        .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    final Request.Builder builder =
+        new Request.Builder()
+            .url(urlFor(path))
+            .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     builder.addHeader(HttpHeaders.AUTHORIZATION, getAuthorizationHeader(path));
 
     return builder;
@@ -791,10 +792,11 @@ public class GitHubClient {
 
   private Request.Builder graphqlRequestBuilder() {
     URI url = graphqlUrl.orElseThrow(() -> new IllegalStateException("No graphql url set"));
-    final Request.Builder builder = new Request.Builder()
-        .url(url.toString())
-        .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-        .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    final Request.Builder builder = new 
+        Request.Builder()
+            .url(url.toString())
+            .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     builder.addHeader(HttpHeaders.AUTHORIZATION, getAuthorizationHeader("/graphql"));
     return builder;
   }
@@ -811,7 +813,7 @@ public class GitHubClient {
    (1) Regular, static access token;
    (2) JWT Token, generated from a private key. Used in Github Apps;
    (3) Installation Token, generated from the JWT token. Also used in Github Apps.
-   */
+  */
   private String getAuthorizationHeader(final String path) {
     if (isJwtRequest(path) && getPrivateKey().isEmpty()) {
       throw new IllegalStateException("This endpoint needs a client with a private key for an App");
@@ -963,9 +965,9 @@ public class GitHubClient {
       final String newLocation = response.header("Location");
       final Request request =
           requestBuilder(newLocation)
-          .url(newLocation)
-          .method(response.request().method(), response.request().body())
-          .build();
+              .url(newLocation)
+              .method(response.request().method(), response.request().body())
+              .build();
       // Do the new call and complete the original future when the new call completes
       return call(request);
     }
