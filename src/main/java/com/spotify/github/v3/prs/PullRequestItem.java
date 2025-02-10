@@ -144,5 +144,6 @@ public interface PullRequestItem extends CloseTracking {
   List<User> requestedTeams();
 
   /** @Deprecated the merge commit sha. */
+  @Deprecated
   Optional<String> mergeCommitSha();
 }

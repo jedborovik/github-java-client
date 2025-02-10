@@ -26,6 +26,8 @@ import com.spotify.github.GitHubInstant;
 /** Jackson databind module for Github API serialization. */
 public class GithubApiModule extends SimpleModule {
 
+  private static final long serialVersionUID = 1L;
+
   /** c'tor. */
   public GithubApiModule() {
     addSerializer(GitHubInstantJsonSerializer.INSTANCE);

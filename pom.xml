@@ -374,13 +374,21 @@
                     <source>11</source>
                     <target>11</target>
                     <release>11</release>
-                    <annotationProcessorPaths combine.children="append">
+                    <annotationProcessorPaths>
                         <path>
                             <groupId>org.immutables</groupId>
                             <artifactId>value</artifactId>
                             <version>${immutables.version}</version>
                         </path>
+                        <path>
+                            <groupId>com.fasterxml.jackson.core</groupId>
+                            <artifactId>jackson-databind</artifactId>
+                            <version>${jackson.version}</version>
+                        </path>
                     </annotationProcessorPaths>
+                    <annotationProcessors>
+                        <annotationProcessor>org.immutables.processor.ProxyProcessor</annotationProcessor>
+                    </annotationProcessors>
                 </configuration>
             </plugin>
             <plugin>

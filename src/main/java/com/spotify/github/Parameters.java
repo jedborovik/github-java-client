@@ -64,7 +64,7 @@ public interface Parameters {
                     optionals will get filtered away later.
                      */
                     return invocationResult instanceof Optional
-                        ? (Optional) invocationResult
+                        ? (Optional<?>) invocationResult
                         : Optional.ofNullable(invocationResult);
                   } catch (Exception e) {
                     return Optional.empty();

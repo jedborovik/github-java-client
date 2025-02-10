@@ -23,6 +23,8 @@ package com.spotify.github.v3.exceptions;
 /** Marks deserialization issues */
 public class DeserializationException extends GithubException {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * Constructor for setting data and message
    *

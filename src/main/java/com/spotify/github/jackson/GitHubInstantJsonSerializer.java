@@ -30,6 +30,8 @@ import java.io.IOException;
 
 class GitHubInstantJsonSerializer extends StdSerializer<GitHubInstant> {
 
+  private static final long serialVersionUID = 1L;
+
   static final GitHubInstantJsonSerializer INSTANCE = new GitHubInstantJsonSerializer();
 
   private GitHubInstantJsonSerializer() {
