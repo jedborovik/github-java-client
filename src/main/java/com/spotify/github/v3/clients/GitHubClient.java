@@ -371,36 +371,36 @@ public class GitHubClient {
         installationId);
   }
 
-  /**
+    /**
      * This is for clients authenticated as a GitHub App: when performing operations,
-   * the "installation" of the App must be specified.
-   * This returns a {@code GitHubClient} that has been scoped to the
-   * user's/organization's installation of the app, if any.
-   */
-  public CompletionStage<Optional<GitHubClient>> asAppScopedClient(final String owner) {
-    return Async.exceptionallyCompose(this
-                    .createOrganisationClient(owner)
-                    .createGithubAppClient()
-                    .getInstallation()
-                    .thenApply(Installation::id), e -> {
+     * the "installation" of the App must be specified.
+     * This returns a {@code GitHubClient} that has been scoped to the
+     * user's/organization's installation of the app, if any.
+     */
+    public CompletionStage<Optional<GitHubClient>> asAppScopedClient(final String owner) {
+        return Async.exceptionallyCompose(this
+                        .createOrganisationClient(owner)
+                        .createGithubAppClient()
+                        .getInstallation()
+                        .thenApply(Installation::id), e -> {
                     if (e.getCause() instanceof RequestNotOkException && ((RequestNotOkException) e.getCause()).statusCode() == HTTP_NOT_FOUND) {
                         return this
-                            .createUserClient(owner)
-                            .createGithubAppClient()
-                            .getUserInstallation()
-                            .thenApply(Installation::id);
-                      }
-                      return CompletableFuture.failedFuture(e);
-        })
-        .thenApply(id -> Optional.of(this.withScopeForInstallationId(id)))
-        .exceptionally(
-            e -> {
+                                .createUserClient(owner)
+                                .createGithubAppClient()
+                                .getUserInstallation()
+                                .thenApply(Installation::id);
+                    }
+                    return CompletableFuture.failedFuture(e);
+                })
+                .thenApply(id -> Optional.of(this.withScopeForInstallationId(id)))
+                .exceptionally(
+                        e -> {
                             if (e.getCause() instanceof RequestNotOkException && ((RequestNotOkException) e.getCause()).statusCode() == HTTP_NOT_FOUND) {
-                return Optional.empty();
-              }
-              throw new RuntimeException(e);
-            });
-  }
+                                return Optional.empty();
+                            }
+                            throw new RuntimeException(e);
+                        });
+    }
 
   public GitHubClient withTracer(final Tracer tracer) {
     this.tracer = tracer;
@@ -792,8 +792,8 @@ public class GitHubClient {
 
   private Request.Builder graphqlRequestBuilder() {
     URI url = graphqlUrl.orElseThrow(() -> new IllegalStateException("No graphql url set"));
-    final Request.Builder builder = new 
-        Request.Builder()
+    final Request.Builder builder =
+      new Request.Builder()
             .url(url.toString())
             .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
