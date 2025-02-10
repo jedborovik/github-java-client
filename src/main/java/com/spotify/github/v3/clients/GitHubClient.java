@@ -793,10 +793,10 @@ public class GitHubClient {
   private Request.Builder graphqlRequestBuilder() {
     URI url = graphqlUrl.orElseThrow(() -> new IllegalStateException("No graphql url set"));
     final Request.Builder builder =
-      new Request.Builder()
-            .url(url.toString())
-            .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+            new Request.Builder()
+                    .url(url.toString())
+                    .addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                    .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     builder.addHeader(HttpHeaders.AUTHORIZATION, getAuthorizationHeader("/graphql"));
     return builder;
   }
